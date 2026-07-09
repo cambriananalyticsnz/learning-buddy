@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 type Message = {
   role: "user" | "assistant";
@@ -15,6 +17,15 @@ const SUBJECT_EMOJIS: Record<Subject, string> = {
   Biology: "🧬",
   Math: "📐",
   "Computer Science": "💻",
+};
+
+type Profile = {
+  display_name: string;
+  coins: number;
+  xp: number;
+  streak: number;
+  title: string;
+  icon_id: string;
 };
 
 function SamoyedIcon({ className = "w-6 h-6" }: { className?: string }) {
@@ -38,25 +49,99 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [subject, setSubject] = useState<Subject>("Chemistry");
   const [isLoading, setIsLoading] = useState(false);
-  const [coins, setCoins] = useState(120);
-  const [xp, setXp] = useState(340);
-  const [streak] = useState(3);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [luckySprint, setLuckySprint] = useState<{
     active: boolean;
     multiplier: number;
     questionsRemaining: number;
   } | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const supabase = createClient();
 
+  // Fetch user profile on mount
+  useEffect(() => {
+    async function loadProfile() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (profile) {
+        setProfile(profile);
+      }
+    }
+
+    loadProfile();
+  }, []);
+
+  // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Save conversation to Supabase when it changes
+  const saveConversation = useCallback(
+    async (msgs: Message[]) => {
+      if (!profile || msgs.length === 0) return;
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      if (conversationId) {
+        await supabase
+          .from("conversations")
+          .update({ messages: msgs, updated_at: new Date().toISOString() })
+          .eq("id", conversationId);
+      } else if (msgs.length > 0) {
+        // Only create conversation after first exchange
+        const userMsg = msgs.find((m) => m.role === "user");
+        const { data } = await supabase
+          .from("conversations")
+          .insert({
+            user_id: user.id,
+            subject,
+            title: userMsg?.content.slice(0, 60) || "New conversation",
+            messages: msgs,
+          })
+          .select("id")
+          .single();
+
+        if (data) setConversationId(data.id);
+      }
+    },
+    [profile, conversationId, subject]
+  );
+
+  // Save profile changes to Supabase
+  const updateProfile = useCallback(
+    async (updates: Partial<Profile>) => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      await supabase.from("profiles").update(updates).eq("id", user.id);
+    },
+    []
+  );
 
   async function handleSend() {
     if (!input.trim() || isLoading) return;
 
     const userMessage: Message = { role: "user", content: input.trim() };
-    setMessages((prev) => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInput("");
     setIsLoading(true);
 
@@ -67,7 +152,7 @@ export default function ChatPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [...messages, userMessage].map((m) => ({
+          messages: updatedMessages.map((m) => ({
             role: m.role,
             content: m.content,
           })),
@@ -80,12 +165,25 @@ export default function ChatPage() {
 
       const data = await response.json();
       const aiMessage: Message = { role: "assistant", content: data.content };
-      setMessages((prev) => [...prev, aiMessage]);
+      const finalMessages = [...updatedMessages, aiMessage];
+      setMessages(finalMessages);
 
+      // Update game state
       const multiplier = luckySprint?.active ? luckySprint.multiplier : 1;
       const earned = data.earnedCoins * multiplier;
-      setCoins((prev) => prev + earned);
 
+      setProfile((prev) => {
+        if (!prev) return prev;
+        const updated = {
+          ...prev,
+          coins: prev.coins + earned,
+          xp: prev.xp + 10,
+        };
+        updateProfile({ coins: updated.coins, xp: updated.xp });
+        return updated;
+      });
+
+      // Lucky Sprint logic
       if (difficulty === "complex" && !luckySprint?.active && Math.random() < 0.2) {
         setLuckySprint({ active: true, multiplier: 3, questionsRemaining: 5 });
       }
@@ -99,15 +197,24 @@ export default function ChatPage() {
         }
       }
 
-      setXp((prev) => prev + 10);
+      // Save conversation
+      saveConversation(finalMessages);
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Sorry, I couldn't process that. Let's try again!" },
-      ]);
+      const errorMsg: Message = {
+        role: "assistant",
+        content: "Sorry, I couldn't process that. Let's try again!",
+      };
+      const finalMessages = [...updatedMessages, errorMsg];
+      setMessages(finalMessages);
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    router.push("/auth/login");
+    router.refresh();
   }
 
   return (
@@ -120,17 +227,49 @@ export default function ChatPage() {
           </div>
           <div>
             <div className="font-bold text-lg text-white">Learning Buddy</div>
-            <div className="text-xs text-zinc-500">🔥 {streak}-day streak</div>
+            <div className="text-xs text-zinc-500">🔥 {profile?.streak ?? 0}-day streak</div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
           <div className="flex items-center gap-1 bg-amber-500/10 rounded-xl px-2.5 py-1.5 border border-amber-500/20">
             <span className="text-amber-400 text-sm">🪙</span>
-            <span className="text-sm font-bold text-amber-400">{coins}</span>
+            <span className="text-sm font-bold text-amber-400">{profile?.coins ?? 0}</span>
           </div>
           <div className="flex items-center gap-1 bg-zinc-900 rounded-xl px-2.5 py-1.5 border border-white/5">
             <span className="text-zinc-500 text-sm">✦</span>
-            <span className="text-sm font-semibold text-white">{xp}</span>
+            <span className="text-sm font-semibold text-white">{profile?.xp ?? 0}</span>
+          </div>
+
+          {/* User menu */}
+          <div className="relative">
+            <button
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-xs text-white border border-zinc-700 transition-colors"
+            >
+              🧑
+            </button>
+
+            {showUserMenu && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
+                <div className="absolute right-0 top-10 z-20 w-48 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl overflow-hidden">
+                  <div className="px-3.5 py-3 border-b border-zinc-800">
+                    <p className="text-sm font-medium text-white truncate">
+                      {profile?.display_name || "Student"}
+                    </p>
+                    <p className="text-[10px] text-zinc-500 mt-0.5">
+                      {profile?.title || "Trainee"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -255,7 +394,12 @@ export default function ChatPage() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
           placeholder={`Ask about ${subject}...`}
           className="flex-1 bg-transparent text-sm text-white placeholder-zinc-500 outline-none"
           disabled={isLoading}
@@ -265,7 +409,15 @@ export default function ChatPage() {
           disabled={isLoading || !input.trim()}
           className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center hover:bg-amber-500/20 disabled:opacity-30 transition-colors"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-400">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="text-amber-400"
+          >
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </button>
