@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning Buddy — UI Design Samples</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      borderRadius: { 'xl': '0.75rem', '2xl': '1rem' }
+    }
+  }
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+* { font-family: 'Nunito', sans-serif; }
+body { background: #f8fafc; }
+.tab-btn { transition: all 0.2s; }
+.theme-transition { transition: background 0.3s, color 0.3s, border-color 0.3s; }
+</style>
+</head>
+<body>
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-extrabold text-gray-800">🎨 Learning Buddy — UI Design Samples</h1>
+    <p class="text-gray-500 mt-2">Click the tabs below to see different visual styles</p>
+  </div>
+
+  <!-- Tab buttons -->
+  <div class="flex justify-center gap-3 mb-8 flex-wrap">
+    <button onclick="switchTab('playful')" class="tab-btn px-6 py-3 rounded-2xl font-bold text-lg bg-gradient-to-r from-orange-400 to-pink-500 text-white shadow-lg shadow-orange-200 hover:shadow-xl hover:scale-105 active:scale-95">🎮 Playful & Gamified</button>
+    <button onclick="switchTab('study')" class="tab-btn px-6 py-3 rounded-2xl font-bold text-lg bg-gradient-to-r from-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-200 hover:shadow-xl hover:scale-105 active:scale-95">📚 Study Aesthetic</button>
+    <button onclick="switchTab('cosmic')" class="tab-btn px-6 py-3 rounded-2xl font-bold text-lg bg-gradient-to-r from-gray-900 to-black text-white shadow-lg shadow-gray-400/20 hover:shadow-xl hover:scale-105 active:scale-95 border border-white/10">⚫ Black & Dark</button>
+  </div>
+
+  <!-- ===== Playful & Gamified ===== -->
+  <div id="playful" class="tab-content">
+    <div class="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-3xl p-6 shadow-lg border-2 border-orange-100">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-2xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-orange-200 overflow-hidden">🐕</div>
+          <div>
+            <div class="font-extrabold text-xl text-gray-800">Learning Buddy</div>
+            <div class="text-xs text-orange-500 font-semibold">🔥 5-day streak · Level 3 Scholar</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 bg-white/80 rounded-2xl px-4 py-2 shadow-sm">
+          <span class="text-yellow-500">⭐</span>
+          <span class="font-bold text-gray-700">1,240 XP</span>
+        </div>
+      </div>
+
+      <!-- Subject chips -->
+      <div class="flex gap-2 mb-4 flex-wrap">
+        <span class="px-4 py-2 rounded-2xl font-semibold text-sm bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md shadow-purple-200">🧪 Chemistry</span>
+        <span class="px-4 py-2 rounded-2xl font-semibold text-sm bg-white text-gray-600 border-2 border-gray-200 hover:border-purple-300 cursor-pointer">🧬 Biology</span>
+        <span class="px-4 py-2 rounded-2xl font-semibold text-sm bg-white text-gray-600 border-2 border-gray-200 hover:border-purple-300 cursor-pointer">📐 Math</span>
+        <span class="px-4 py-2 rounded-2xl font-semibold text-sm bg-white text-gray-600 border-2 border-gray-200 hover:border-purple-300 cursor-pointer">💻 CS</span>
+      </div>
+
+      <!-- Chat area -->
+      <div class="bg-white rounded-2xl p-5 shadow-inner mb-4">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-9 h-9 bg-gradient-to-br from-orange-400 to-pink-500 rounded-xl flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">🐕</div>
+          <div class="bg-orange-50 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]">
+            <p class="text-sm text-gray-700 leading-relaxed">Hey! 🌟 I see you're studying <strong>Electrolysis</strong> today. What's puzzling you?</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 mb-4 justify-end">
+          <div class="bg-purple-50 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%]">
+            <p class="text-sm text-gray-700">Why is the anode positive? I thought anode should be negative...</p>
+          </div>
+          <div class="w-9 h-9 bg-gradient-to-br from-purple-400 to-blue-500 rounded-xl flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">😊</div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 bg-gradient-to-br from-orange-400 to-pink-500 rounded-xl flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">🐕</div>
+          <div class="bg-orange-50 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]">
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Great question! 🔋 In electrolysis, the <strong>anode is positive</strong> because it's connected to the positive terminal of the power supply. It <em>attracts negative ions</em> (anions).<br><br>
+              ⚠️ <strong>Reminder:</strong> You mixed up anode/cathode last time! Here's a trick: <em>"Anode = Attracts Anions"</em> — both start with 'A'. Got it?
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="flex gap-2">
+        <input type="text" placeholder="Ask anything about Chemistry..." class="flex-1 bg-white border-2 border-orange-100 rounded-2xl px-5 py-3 text-sm outline-none focus:border-orange-300">
+        <button class="bg-gradient-to-r from-orange-400 to-pink-500 text-white px-6 py-3 rounded-2xl font-bold shadow-md shadow-orange-200 hover:shadow-lg hover:scale-105 active:scale-95">Send ✨</button>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="mt-5 bg-white/80 rounded-2xl p-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-bold text-gray-700">🧪 Chemistry Progress</span>
+          <span class="text-sm font-bold text-orange-500">42%</span>
+        </div>
+        <div class="h-3 bg-orange-100 rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-orange-400 to-pink-500 rounded-full" style="width:42%"></div>
+        </div>
+        <div class="flex justify-between mt-2 text-xs text-gray-500">
+          <span>Atomic Structure ✅</span>
+          <span>Bonding ✅</span>
+          <span>Electrolysis 🔄</span>
+          <span>Organic ⏳</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-100">
+      <p class="text-sm text-amber-700 font-semibold">🎯 Vibe: Energetic, colourful, rewarding. Bright oranges, pinks, purples. Rounded everything. Feels like a game.</p>
+    </div>
+  </div>
+
+  <!-- ===== Study Aesthetic ===== -->
+  <div id="study" class="tab-content hidden">
+    <div class="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-3xl p-6 shadow-lg border-2 border-amber-100">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-amber-600 rounded-2xl flex items-center justify-center text-white text-xl font-bold">📖</div>
+          <div>
+            <div class="font-bold text-xl text-amber-900">Study Companion</div>
+            <div class="text-xs text-amber-600 italic">"small steps, big progress"</div>
+          </div>
+        </div>
+        <div class="text-xs text-amber-500 flex items-center gap-1">📅 Today · 3:42 PM</div>
+      </div>
+
+      <!-- Subject -->
+      <div class="mb-4">
+        <span class="text-xs text-amber-500 font-semibold uppercase tracking-wider">Currently studying</span>
+        <div class="text-xl font-bold text-amber-800">Electrolysis · Chemistry</div>
+      </div>
+
+      <!-- Chat -->
+      <div class="bg-white/90 rounded-2xl p-5 shadow-inner mb-4">
+        <div class="flex items-start gap-3 mb-5">
+          <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center text-white text-xs">📖</div>
+          <div class="bg-amber-50 rounded-xl px-4 py-3">
+            <p class="text-sm text-gray-700 leading-relaxed">I see you're revisiting electrolysis. Let's build on what you know. What does "electrolysis" mean to you?</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 mb-5 justify-end">
+          <div class="bg-gray-50 rounded-xl px-4 py-3 max-w-[80%]">
+            <p class="text-sm text-gray-700">Splitting compounds using electricity?</p>
+          </div>
+          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs">🧑</div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center text-white text-xs">📖</div>
+          <div class="bg-amber-50 rounded-xl px-4 py-3">
+            <p class="text-sm text-gray-700 leading-relaxed">Exactly right! ✅ Now — why does the anode need to be positive? Think about what charge the negative ions have...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="flex gap-2">
+        <input type="text" placeholder="Type your answer or question..." class="flex-1 bg-white/90 border border-amber-200 rounded-xl px-5 py-3 text-sm outline-none focus:border-amber-400">
+        <button class="bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-amber-700">Ask →</button>
+      </div>
+
+      <!-- Suggested topics -->
+      <div class="mt-5 flex gap-2 flex-wrap">
+        <span class="text-xs text-amber-600 bg-amber-100 px-3 py-1.5 rounded-lg">Why is anode positive?</span>
+        <span class="text-xs text-amber-600 bg-amber-100 px-3 py-1.5 rounded-lg">Half-equations</span>
+        <span class="text-xs text-amber-600 bg-amber-100 px-3 py-1.5 rounded-lg">Electroplating</span>
+      </div>
+    </div>
+    <div class="mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-4 border border-amber-100">
+      <p class="text-sm text-amber-700 font-semibold">📚 Vibe: Warm, calm, focused. Like a cosy library. Warm ambers, browns, soft yellows. Minimal distractions, study-first.</p>
+    </div>
+  </div>
+
+  <!-- ===== Black & Dark ===== -->
+  <div id="cosmic" class="tab-content hidden">
+    <div class="bg-black rounded-3xl p-6 shadow-2xl border border-white/5">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-zinc-900 rounded-2xl flex items-center justify-center border border-white/5 overflow-hidden">
+            <svg viewBox="0 0 100 100" class="w-7 h-7">
+              <ellipse cx="28" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+              <ellipse cx="72" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+              <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ffffff"/>
+              <ellipse cx="38" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+              <ellipse cx="62" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+              <circle cx="39.5" cy="46" r="1.8" fill="#ffffff"/>
+              <circle cx="63.5" cy="46" r="1.8" fill="#ffffff"/>
+              <ellipse cx="50" cy="58" rx="5" ry="3.5" fill="#1a1a1a"/>
+              <path d="M 41 62 Q 50 70 59 62" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="font-bold text-lg text-white">Learning Buddy</div>
+            <div class="text-xs text-zinc-500">Level 7 Scholar</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- Coin counter -->
+          <div class="flex items-center gap-1.5 bg-amber-500/10 rounded-2xl px-3 py-1.5 border border-amber-500/20">
+            <span class="text-amber-400 text-sm">🪙</span>
+            <span class="text-sm font-bold text-amber-400">3,640</span>
+          </div>
+          <!-- XP counter -->
+          <div class="flex items-center gap-1.5 bg-zinc-900 rounded-2xl px-3 py-1.5 border border-white/5">
+            <span class="text-zinc-500 text-sm">✦</span>
+            <span class="text-sm font-semibold text-white">2,180</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subject + Shop trigger -->
+      <div class="flex gap-2 mb-4 justify-between">
+        <div class="flex gap-2">
+          <span class="px-4 py-2 rounded-xl text-sm font-semibold bg-zinc-800 text-amber-400 border border-zinc-700">⚡ Chemistry</span>
+          <span class="px-4 py-2 rounded-xl text-sm text-zinc-500 hover:bg-zinc-900 cursor-pointer">🧬 Biology</span>
+          <span class="px-4 py-2 rounded-xl text-sm text-zinc-500 hover:bg-zinc-900 cursor-pointer">📐 Math</span>
+          <span class="px-4 py-2 rounded-xl text-sm text-zinc-500 hover:bg-zinc-900 cursor-pointer">💻 CS</span>
+        </div>
+        <div class="flex gap-1">
+          <button onclick="showProfile()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-zinc-800 text-zinc-400 border border-zinc-700 hover:bg-zinc-700">👤 Profile</button>
+          <button onclick="showShop()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-zinc-800 text-amber-400/80 border border-zinc-700 hover:bg-zinc-700">🏪 Shop</button>
+        </div>
+      </div>
+
+      <!-- 🍀 Lucky Sprint Banner -->
+      <div class="mb-4 px-4 py-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10 border border-amber-500/20">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-amber-400 text-base">🍀</span>
+              <span class="text-sm font-bold text-amber-400">Lucky Sprint Active!</span>
+            </div>
+            <div class="text-xs text-zinc-400 mt-0.5">3x coins on every correct answer · 4 questions remaining</div>
+          </div>
+          <div class="text-2xl font-extrabold text-amber-400 animate-pulse">×3</div>
+        </div>
+        <!-- Timer bar -->
+        <div class="mt-2 h-1 bg-zinc-800 rounded-full overflow-hidden">
+          <div class="h-full w-[60%] bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full"></div>
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div class="bg-zinc-900/80 rounded-2xl p-5 mb-4 border border-white/5">
+        <div class="flex items-start gap-3 mb-4">
+          <div class="w-9 h-9 bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700 shrink-0 overflow-hidden">
+            <svg viewBox="0 0 100 100" class="w-6 h-6">
+              <ellipse cx="28" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+              <ellipse cx="72" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+              <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ffffff"/>
+              <ellipse cx="38" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+              <ellipse cx="62" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+              <circle cx="39.5" cy="46" r="1.8" fill="#ffffff"/>
+              <circle cx="63.5" cy="46" r="1.8" fill="#ffffff"/>
+              <ellipse cx="50" cy="58" rx="5" ry="3.5" fill="#1a1a1a"/>
+              <path d="M 41 62 Q 50 70 59 62" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="bg-zinc-800/80 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] border border-zinc-700/50">
+            <p class="text-sm text-zinc-100 leading-relaxed">Welcome back! 🍀 Lucky Sprint is live! Every correct answer earns <span class="text-amber-400 font-semibold">3x coins</span>. Ready to test your Electrolysis knowledge?</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 mb-4 justify-end">
+          <div class="bg-zinc-800/80 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] border border-zinc-700/50">
+            <p class="text-sm text-zinc-200">Why does the anode need to be positive?</p>
+          </div>
+          <div class="w-9 h-9 bg-zinc-700 rounded-xl flex items-center justify-center text-white text-xs border border-zinc-600 shrink-0">🧑</div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700 shrink-0 overflow-hidden">
+            <svg viewBox="0 0 100 100" class="w-6 h-6">
+              <ellipse cx="28" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+              <ellipse cx="72" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+              <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ffffff"/>
+              <ellipse cx="38" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+              <ellipse cx="62" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+              <circle cx="39.5" cy="46" r="1.8" fill="#ffffff"/>
+              <circle cx="63.5" cy="46" r="1.8" fill="#ffffff"/>
+              <ellipse cx="50" cy="58" rx="5" ry="3.5" fill="#1a1a1a"/>
+              <path d="M 41 62 Q 50 70 59 62" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="bg-zinc-800/80 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] border border-zinc-700/50">
+            <p class="text-sm text-zinc-100 leading-relaxed">
+              <span class="text-amber-400 font-semibold">Great answer!</span> The anode is connected to the <strong class="text-white">positive terminal</strong> — it attracts negative ions (anions).<br><br>
+              <span class="text-zinc-400">⚠️</span> <span class="text-zinc-300 text-xs">You confused anode/cathode last week. Remember: </span><span class="text-amber-400 text-xs font-semibold">"Anode = Attracts Anions"</span>
+            </p>
+            <!-- Coin earned notification -->
+            <div class="mt-2 pt-2 border-t border-zinc-800 flex items-center justify-between">
+              <span class="text-xs text-zinc-500">✅ Correct answer</span>
+              <span class="text-xs font-bold text-amber-400 flex items-center gap-1">+30 🪙 <span class="text-yellow-500 text-[10px]">×3 lucky bonus!</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="flex gap-2">
+        <input type="text" placeholder="Ask anything..." class="flex-1 bg-zinc-900 border border-zinc-700 rounded-2xl px-5 py-3 text-sm text-white placeholder-zinc-500 outline-none focus:border-amber-500/50">
+        <button class="bg-zinc-800 text-white px-6 py-3 rounded-2xl font-bold border border-zinc-700 hover:bg-zinc-700 active:scale-95">Send</button>
+      </div>
+
+      <!-- Progress + Shop tease -->
+      <div class="mt-5 flex items-center justify-between bg-zinc-900 rounded-2xl p-4 border border-white/5">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-amber-400 font-bold text-sm border border-zinc-700">42%</div>
+          <div>
+            <div class="text-sm font-semibold text-white">Chemistry</div>
+            <div class="text-xs text-zinc-500">3 of 7 modules · <span class="text-amber-500">🔥 Day 5</span></div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="w-24 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full" style="width:42%"></div>
+          </div>
+          <div class="text-[10px] text-zinc-600 mt-1.5">Next title: <span class="text-amber-500">Electrolysis Master</span> 🪙 500</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Profile Panel (hidden by default) ===== -->
+    <div id="profile-panel" class="hidden bg-zinc-900/95 rounded-2xl p-5 mt-3 border border-zinc-700/50">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-sm font-semibold text-white">👤 My Profile</div>
+        <button onclick="hideProfile()" class="text-xs text-zinc-500 hover:text-zinc-300">✕ Close</button>
+      </div>
+      <!-- Current display -->
+      <div class="flex items-center gap-4 mb-5 pb-4 border-b border-zinc-800">
+        <div class="w-14 h-14 bg-zinc-800 rounded-2xl flex items-center justify-center border border-zinc-700 overflow-hidden">
+          <svg viewBox="0 0 100 100" class="w-9 h-9">
+            <ellipse cx="28" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+            <ellipse cx="72" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+            <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ffffff"/>
+            <ellipse cx="38" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+            <ellipse cx="62" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+            <circle cx="39.5" cy="46" r="1.8" fill="#ffffff"/>
+            <circle cx="63.5" cy="46" r="1.8" fill="#ffffff"/>
+            <ellipse cx="50" cy="58" rx="5" ry="3.5" fill="#1a1a1a"/>
+            <path d="M 41 62 Q 50 70 59 62" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <rect x="20" y="15" width="60" height="8" rx="3" fill="#f59e0b" opacity="0.8"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-base font-bold text-white flex items-center gap-2">Student <span class="text-xs px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20">Center</span></div>
+          <div class="text-xs text-zinc-500">🪙 3,640 · ✦ 2,180 XP · 🔥 5-day streak</div>
+        </div>
+      </div>
+      <!-- Title slot -->
+      <div class="mb-3">
+        <div class="text-xs text-zinc-500 mb-2 font-medium">Current title</div>
+        <div class="flex items-center justify-between bg-zinc-800/50 rounded-xl px-3.5 py-2.5 border border-zinc-700/50">
+          <span class="text-sm text-white font-semibold">Center</span>
+          <span class="text-[10px] text-zinc-500">⇄ Tap to change</span>
+        </div>
+      </div>
+      <!-- Icon slot -->
+      <div>
+        <div class="text-xs text-zinc-500 mb-2 font-medium">Current icon</div>
+        <div class="flex items-center justify-between bg-zinc-800/50 rounded-xl px-3.5 py-2.5 border border-zinc-700/50">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-zinc-700 rounded-lg flex items-center justify-center overflow-hidden">
+              <svg viewBox="0 0 100 100" class="w-5 h-5">
+                <ellipse cx="28" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+                <ellipse cx="72" cy="25" rx="14" ry="12" fill="#f5f5f5"/>
+                <ellipse cx="50" cy="55" rx="32" ry="28" fill="#ffffff"/>
+                <ellipse cx="38" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+                <ellipse cx="62" cy="48" rx="4.5" ry="5" fill="#1a1a1a"/>
+                <circle cx="39.5" cy="46" r="1.8" fill="#ffffff"/>
+                <circle cx="63.5" cy="46" r="1.8" fill="#ffffff"/>
+                <ellipse cx="50" cy="58" rx="5" ry="3.5" fill="#1a1a1a"/>
+                <path d="M 41 62 Q 50 70 59 62" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="text-sm text-white">Crown Samoyed</span>
+          </div>
+          <span class="text-[10px] text-zinc-500">⇄ Tap to change</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Shop Panel (hidden by default) ===== -->
+    <div id="shop-panel" class="hidden bg-zinc-900/95 rounded-2xl p-5 mt-3 border border-zinc-700/50">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-sm font-semibold text-white">🏪 Title & Icon Shop</div>
+        <button onclick="hideShop()" class="text-xs text-zinc-500 hover:text-zinc-300">✕ Close</button>
+      </div>
+      <div class="flex items-center gap-2 mb-4 bg-amber-500/5 rounded-xl px-3.5 py-2 border border-amber-500/10">
+        <span class="text-amber-400 text-base">🪙</span>
+        <span class="text-sm text-zinc-300">Your balance: <span class="text-amber-400 font-bold">3,640</span></span>
+      </div>
+      <!-- Titles section -->
+      <div class="mb-3">
+        <div class="text-xs text-zinc-500 mb-2 font-medium uppercase tracking-wider">Titles</div>
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between bg-zinc-800/50 rounded-xl px-3.5 py-2.5 border border-zinc-700/50">
+            <span class="text-sm text-white">🏆 Trainee</span>
+            <span class="text-[10px] text-zinc-600">Owned</span>
+          </div>
+          <div class="flex items-center justify-between bg-zinc-800/50 rounded-xl px-3.5 py-2.5 border border-zinc-700/50">
+            <span class="text-sm text-white">🏆 Rookie</span>
+            <span class="text-[10px] text-zinc-600">Owned</span>
+          </div>
+          <div class="flex items-center justify-between bg-zinc-800/50 rounded-xl px-3.5 py-2.5 border border-zinc-700/50">
+            <span class="text-sm text-white">🏆 Idol</span>
+            <span class="text-[10px] text-zinc-600">Owned</span>
+          </div>
+          <div class="flex items-center justify-between bg-zinc-800/50 rounded-xl px-3.5 py-2.5 border border-zinc-700/50">
+            <span class="text-sm text-white">🏆 Ace</span>
+            <span class="text-[10px] text-zinc-600">Owned</span>
+          </div>
+          <div class="flex items-center justify-between bg-zinc-800/50 rounded-xl px-3.5 py-2.5 border border-zinc-700/50">
+            <span class="text-sm text-white">🏆 Center</span>
+            <span class="text-[10px] text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-md">Active</span>
+          </div>
+          <div class="flex items-center justify-between bg-zinc-800/30 rounded-xl px-3.5 py-2.5 border border-zinc-700/30 opacity-50">
+            <span class="text-sm text-zinc-400">🏆 Legend</span>
+            <span class="text-[10px] text-zinc-600">Locked · 🪙 1,200</span>
+          </div>
+        </div>
+      </div>
+      <!-- Icons section -->
+      <div>
+        <div class="text-xs text-zinc-500 mb-2 font-medium uppercase tracking-wider">Icons</div>
+        <div class="grid grid-cols-4 gap-2">
+          <div class="bg-zinc-800/50 rounded-xl p-3 flex flex-col items-center gap-1 border border-zinc-700/50">
+            <div class="w-8 h-8 bg-zinc-700 rounded-lg flex items-center justify-center text-xs">🐕</div>
+            <span class="text-[9px] text-zinc-500">Basic</span>
+            <span class="text-[8px] text-zinc-600">Owned</span>
+          </div>
+          <div class="bg-zinc-800/50 rounded-xl p-3 flex flex-col items-center gap-1 border border-zinc-700/50">
+            <div class="w-8 h-8 bg-zinc-700 rounded-lg flex items-center justify-center text-xs">⭐</div>
+            <span class="text-[9px] text-zinc-500">Star</span>
+            <span class="text-[8px] text-zinc-600">Owned</span>
+          </div>
+          <div class="bg-zinc-800/50 rounded-xl p-3 flex flex-col items-center gap-1 border border-zinc-700/50">
+            <div class="w-8 h-8 bg-amber-500/10 rounded-lg flex items-center justify-center text-base">👑</div>
+            <span class="text-[9px] text-zinc-500">Crown</span>
+            <span class="text-[8px] text-amber-500">Active</span>
+          </div>
+          <div class="bg-zinc-800/50 rounded-xl p-3 flex flex-col items-center gap-1 border border-zinc-700/50">
+            <div class="w-8 h-8 bg-zinc-700/30 rounded-lg flex items-center justify-center text-xs opacity-40">💎</div>
+            <span class="text-[9px] text-zinc-600">Diamond</span>
+            <span class="text-[8px] text-zinc-600">🪙 600</span>
+          </div>
+          <div class="bg-zinc-800/50 rounded-xl p-3 flex flex-col items-center gap-1 border border-zinc-700/50">
+            <div class="w-8 h-8 bg-zinc-700/30 rounded-lg flex items-center justify-center text-xs opacity-40">🌙</div>
+            <span class="text-[9px] text-zinc-600">Moon</span>
+            <span class="text-[8px] text-zinc-600">🪙 900</span>
+          </div>
+          <div class="bg-zinc-800/50 rounded-xl p-3 flex flex-col items-center gap-1 border border-zinc-700/50">
+            <div class="w-8 h-8 bg-zinc-700/30 rounded-lg flex items-center justify-center text-xs opacity-40">✨</div>
+            <span class="text-[9px] text-zinc-600">Sparkle</span>
+            <span class="text-[8px] text-zinc-600">🪙 1,200</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mt-4 bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
+      <p class="text-sm text-zinc-400 font-semibold mb-2">🪙 Fortune-Making System</p>
+      <div class="space-y-1 text-xs text-zinc-500">
+        <p>• 🪙 <span class="text-zinc-300">Coins</span> — earned from correct answers. Harder question = more coins</p>
+        <p>• 🍀 <span class="text-amber-300">Lucky Sprint</span> — milestone trigger or buy for 100🪙. ×3 coins for 5 questions</p>
+        <p>• 🏆 <span class="text-zinc-300">Titles</span> — Trainee → Rookie → Idol → Ace → Center → Legend. Buy with coins</p>
+        <p>• 🎨 <span class="text-zinc-300">Icons</span> — each level unlocks 2 icon options (1 samoyed variant + 1 symbol)</p>
+        <p>• 📈 <span class="text-zinc-300">Level-up</span> — total coins spent determines your title level cap</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-10 text-center">
+    <p class="text-gray-500 text-sm">👆 Click through the tabs above to see different design directions</p>
+    <p class="text-gray-400 text-xs mt-2">This is a static mockup — final app will be interactive and fully responsive</p>
+  </div>
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.getElementById('profile-panel')?.classList.add('hidden');
+  document.getElementById('shop-panel')?.classList.add('hidden');
+}
+function showProfile() {
+  document.getElementById('profile-panel').classList.remove('hidden');
+  document.getElementById('shop-panel').classList.add('hidden');
+}
+function hideProfile() {
+  document.getElementById('profile-panel').classList.add('hidden');
+}
+function showShop() {
+  document.getElementById('shop-panel').classList.remove('hidden');
+  document.getElementById('profile-panel').classList.add('hidden');
+}
+function hideShop() {
+  document.getElementById('shop-panel').classList.add('hidden');
+}
+// default show Black & Dark
+switchTab('cosmic');
+</script>
+</body>
+</html>
