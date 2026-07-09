@@ -25,27 +25,12 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
+  // Refresh the session — keeps the auth cookie alive
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protected routes (redirect to login if not authenticated)
-  const protectedPaths = ["/chat"];
-  const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  if (
-    isProtected &&
-    !user &&
-    !request.nextUrl.pathname.startsWith("/auth")
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
-    return NextResponse.redirect(url);
-  }
-
-  // If user is already logged in and tries to access auth pages, redirect to home
+  // Redirect authenticated users away from auth pages
   if (user && request.nextUrl.pathname.startsWith("/auth")) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
