@@ -1,3 +1,6 @@
+# python venv
+venv/
+
 # dependencies
 node_modules/
 .pnp
