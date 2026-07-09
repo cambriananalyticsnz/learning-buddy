@@ -65,10 +65,12 @@ function ChatContent() {
   // Fetch user profile on mount, or use local defaults
   useEffect(() => {
     async function load() {
+      let loadedUserId: string | null = null;
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
+        loadedUserId = user.id;
         setUserId(user.id);
         const { data: profile } = await supabase
           .from("profiles")
@@ -77,20 +79,63 @@ function ChatContent() {
           .single();
         if (profile) setProfile(profile);
       } else {
-        // Single-user mode — use local defaults
-        setProfile({
-          display_name: "Student",
-          coins: 100,
-          xp: 0,
-          streak: 0,
-          title: "Trainee",
-          icon_id: "samoyed-basic",
-        });
+        // Try anonymous sign-in for persistent single-user mode
+        const { data: anon } = await supabase.auth.signInAnonymously();
+        if (anon?.user) {
+          loadedUserId = anon.user.id;
+          setUserId(anon.user.id);
+          // Fetch or create profile for anonymous user
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", anon.user.id)
+            .single();
+
+          if (profile) {
+            setProfile({
+              display_name: profile.display_name || "Student",
+              coins: profile.coins ?? 100,
+              xp: profile.xp ?? 0,
+              streak: profile.streak ?? 0,
+              title: profile.title || "Trainee",
+              icon_id: profile.icon_id || "samoyed-basic",
+            });
+          } else {
+            // Create profile for new anonymous user
+            await supabase.from("profiles").insert({
+              id: anon.user.id,
+              display_name: "Student",
+              coins: 100,
+              xp: 0,
+              streak: 0,
+              title: "Trainee",
+              icon_id: "samoyed-basic",
+            });
+            setProfile({
+              display_name: "Student",
+              coins: 100,
+              xp: 0,
+              streak: 0,
+              title: "Trainee",
+              icon_id: "samoyed-basic",
+            });
+          }
+        } else {
+          // Fallback to local defaults if anonymous auth isn't available
+          setProfile({
+            display_name: "Student",
+            coins: 100,
+            xp: 0,
+            streak: 0,
+            title: "Trainee",
+            icon_id: "samoyed-basic",
+          });
+        }
       }
 
       // Load conversation from URL if specified
       const urlConversationId = searchParams.get("conversationId");
-      if (urlConversationId && user) {
+      if (urlConversationId && loadedUserId) {
         const { data: conv } = await supabase
           .from("conversations")
           .select("*")
