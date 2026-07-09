@@ -25,17 +25,8 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Refresh the session — keeps the auth cookie alive
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Redirect authenticated users away from auth pages
-  if (user && request.nextUrl.pathname.startsWith("/auth")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
+  // Refresh the auth session — keeps the cookie alive
+  await supabase.auth.getUser();
 
   return supabaseResponse;
 }

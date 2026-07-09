@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SamoyedIcon from "@/components/SamoyedIcon";
 
@@ -43,25 +42,34 @@ export default function ChatPage() {
   } | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const supabase = createClient();
 
-  // Fetch user profile on mount
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Fetch user profile on mount, or use local defaults
   useEffect(() => {
     async function loadProfile() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-
-      if (profile) {
-        setProfile(profile);
+      if (user) {
+        setUserId(user.id);
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+        if (profile) setProfile(profile);
+      } else {
+        // Single-user mode — use local defaults
+        setProfile({
+          display_name: "Student",
+          coins: 100,
+          xp: 0,
+          streak: 0,
+          title: "Trainee",
+          icon_id: "samoyed-basic",
+        });
       }
     }
 
@@ -74,52 +82,36 @@ export default function ChatPage() {
   }, [messages]);
 
   // Save conversation to Supabase when it changes
-  const saveConversation = useCallback(
-    async (msgs: Message[]) => {
-      if (!profile || msgs.length === 0) return;
+  async function saveConversation(msgs: Message[]) {
+    if (!userId || !profile || msgs.length === 0) return;
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+    if (conversationId) {
+      await supabase
+        .from("conversations")
+        .update({ messages: msgs, updated_at: new Date().toISOString() })
+        .eq("id", conversationId);
+    } else if (msgs.length > 0) {
+      const userMsg = msgs.find((m) => m.role === "user");
+      const { data } = await supabase
+        .from("conversations")
+        .insert({
+          user_id: userId,
+          subject,
+          title: userMsg?.content.slice(0, 60) || "New conversation",
+          messages: msgs,
+        })
+        .select("id")
+        .single();
 
-      if (conversationId) {
-        await supabase
-          .from("conversations")
-          .update({ messages: msgs, updated_at: new Date().toISOString() })
-          .eq("id", conversationId);
-      } else if (msgs.length > 0) {
-        // Only create conversation after first exchange
-        const userMsg = msgs.find((m) => m.role === "user");
-        const { data } = await supabase
-          .from("conversations")
-          .insert({
-            user_id: user.id,
-            subject,
-            title: userMsg?.content.slice(0, 60) || "New conversation",
-            messages: msgs,
-          })
-          .select("id")
-          .single();
-
-        if (data) setConversationId(data.id);
-      }
-    },
-    [profile, conversationId, subject]
-  );
+      if (data) setConversationId(data.id);
+    }
+  }
 
   // Save profile changes to Supabase
-  const updateProfile = useCallback(
-    async (updates: Partial<Profile>) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      await supabase.from("profiles").update(updates).eq("id", user.id);
-    },
-    []
-  );
+  async function updateProfile(updates: Partial<Profile>) {
+    if (!userId) return;
+    await supabase.from("profiles").update(updates).eq("id", userId);
+  }
 
   async function handleSend() {
     if (!input.trim() || isLoading) return;
@@ -196,12 +188,6 @@ export default function ChatPage() {
     }
   }
 
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.push("/auth/login");
-    router.refresh();
-  }
-
   return (
     <div className="h-full flex flex-col max-w-2xl mx-auto px-4 py-4">
       {/* Header */}
@@ -225,7 +211,7 @@ export default function ChatPage() {
             <span className="text-sm font-semibold text-white">{profile?.xp ?? 0}</span>
           </div>
 
-          {/* User menu */}
+          {/* User menu — shows profile info */}
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
@@ -238,7 +224,7 @@ export default function ChatPage() {
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
                 <div className="absolute right-0 top-10 z-20 w-48 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl overflow-hidden">
-                  <div className="px-3.5 py-3 border-b border-zinc-800">
+                  <div className="px-3.5 py-3">
                     <p className="text-sm font-medium text-white truncate">
                       {profile?.display_name || "Student"}
                     </p>
@@ -246,12 +232,6 @@ export default function ChatPage() {
                       {profile?.title || "Trainee"}
                     </p>
                   </div>
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition-colors"
-                  >
-                    Sign Out
-                  </button>
                 </div>
               </>
             )}
