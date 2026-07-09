@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SamoyedIcon from "@/components/SamoyedIcon";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 
 type Message = {
   role: "user" | "assistant";
@@ -323,9 +324,13 @@ export default function ChatPage() {
                   : "bg-zinc-900/80 rounded-tl-sm border border-zinc-700/30"
               }`}
             >
-              <p className="text-sm text-zinc-100 leading-relaxed whitespace-pre-wrap">
-                {msg.content}
-              </p>
+              {msg.role === "user" ? (
+                <p className="text-sm text-zinc-100 leading-relaxed whitespace-pre-wrap">
+                  {msg.content}
+                </p>
+              ) : (
+                <MarkdownRenderer content={msg.content} />
+              )}
             </div>
             {msg.role === "user" && (
               <div className="w-7 h-7 rounded-lg bg-zinc-700 flex items-center justify-center text-xs text-white border border-zinc-600 shrink-0 mt-0.5">
