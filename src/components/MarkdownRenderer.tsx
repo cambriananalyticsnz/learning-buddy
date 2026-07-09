@@ -4,6 +4,17 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 
+/** Preprocess content to convert LaTeX delimiters that remark-math doesn't parse natively.
+ *  DeepSeek commonly outputs \[ ... \] for display math and \( ... \) for inline math.
+ *  We normalise these to $$...$$ and $...$ which remark-math handles. */
+function preprocessLatex(content: string): string {
+  return content
+    // \[ ... \] → $$ ... $$  (display math, multi-line safe)
+    .replace(/\\\[([\s\S]*?)\\\]/g, "$$\n$1\n$$")
+    // \( ... \) → $ ... $    (inline math)
+    .replace(/\\\(([\s\S]*?)\\\)/g, "$$1$");
+}
+
 export default function MarkdownRenderer({ content }: { content: string }) {
   return (
     <ReactMarkdown
@@ -60,7 +71,7 @@ export default function MarkdownRenderer({ content }: { content: string }) {
         ),
       }}
     >
-      {content}
+      {preprocessLatex(content)}
     </ReactMarkdown>
   );
 }
