@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SamoyedIcon from "@/components/SamoyedIcon";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
+import { CoinIcon, StarIcon, FireIcon, UserIcon, SparkleIcon, AlertIcon, SubjectIcon } from "@/components/Icons";
 
 type Message = {
   role: "user" | "assistant";
@@ -14,12 +15,6 @@ type Message = {
 type Subject = "Chemistry" | "Biology" | "Math" | "Computer Science";
 
 const SUBJECTS: Subject[] = ["Chemistry", "Biology", "Math", "Computer Science"];
-const SUBJECT_EMOJIS: Record<Subject, string> = {
-  Chemistry: "⚡",
-  Biology: "🧬",
-  Math: "📐",
-  "Computer Science": "💻",
-};
 
 type Profile = {
   display_name: string;
@@ -329,16 +324,19 @@ function ChatContent() {
           </div>
           <div>
             <div className="font-bold text-lg text-white">Learning Buddy</div>
-            <div className="text-xs text-zinc-500">🔥 {profile?.streak ?? 0}-day streak</div>
+            <div className="flex items-center gap-1 text-xs text-zinc-500">
+              <FireIcon size={12} className="text-zinc-500" />
+              {profile?.streak ?? 0}-day streak
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2 relative">
           <div className="flex items-center gap-1 bg-amber-500/10 rounded-xl px-2.5 py-1.5 border border-amber-500/20">
-            <span className="text-amber-400 text-sm">🪙</span>
+            <CoinIcon size={14} className="text-amber-400" />
             <span className="text-sm font-bold text-amber-400">{profile?.coins ?? 0}</span>
           </div>
           <div className="flex items-center gap-1 bg-zinc-900 rounded-xl px-2.5 py-1.5 border border-white/5">
-            <span className="text-zinc-500 text-sm">✦</span>
+            <StarIcon size={14} className="text-zinc-500" />
             <span className="text-sm font-semibold text-white">{profile?.xp ?? 0}</span>
           </div>
 
@@ -346,9 +344,9 @@ function ChatContent() {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-xs text-white border border-zinc-700 transition-colors"
+              className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-white border border-zinc-700 transition-colors"
             >
-              🧑
+              <UserIcon size={16} />
             </button>
 
             {showUserMenu && (
@@ -382,7 +380,7 @@ function ChatContent() {
                 : "text-zinc-500 hover:text-zinc-300 border border-transparent"
             }`}
           >
-            {SUBJECT_EMOJIS[s]} {s}
+            <SubjectIcon subject={s} size={14} className="inline mr-1" /> {s}
           </button>
         ))}
       </div>
@@ -392,7 +390,7 @@ function ChatContent() {
         <div className="mb-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10 border border-amber-500/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-amber-400 text-base">🍀</span>
+              <SparkleIcon size={18} className="text-amber-400" />
               <span className="text-xs font-bold text-amber-400">Lucky Sprint!</span>
               <span className="text-[10px] text-zinc-400">{luckySprint.questionsRemaining} questions left</span>
             </div>
@@ -463,8 +461,8 @@ function ChatContent() {
                 )}
               </div>
               {msg.role === "user" && (
-                <div className="w-7 h-7 rounded-lg bg-zinc-700 flex items-center justify-center text-xs text-white border border-zinc-600 shrink-0 mt-0.5">
-                  🧑
+                <div className="w-7 h-7 rounded-lg bg-zinc-700 flex items-center justify-center text-white border border-zinc-600 shrink-0 mt-0.5">
+                  <UserIcon size={14} />
                 </div>
               )}
             </div>
@@ -476,7 +474,7 @@ function ChatContent() {
                   onClick={() => handleMistakeLog(i)}
                   className="text-[10px] text-zinc-600 hover:text-red-400 transition-colors px-2 py-0.5 rounded bg-zinc-900/50 hover:bg-red-500/10"
                 >
-                  🔴 I didn&apos;t understand this
+                  <AlertIcon size={12} className="inline mr-1" /> I didn&apos;t understand this
                 </button>
               </div>
             )}

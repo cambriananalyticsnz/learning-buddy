@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SamoyedIcon from "@/components/SamoyedIcon";
+import { SubjectIcon, ChevronRightIcon, CheckIcon, TrashIcon } from "@/components/Icons";
 
 type Subject = "Chemistry" | "Biology" | "Math" | "Computer Science";
 type Level = "IGCSE" | "AS" | "A Level";
@@ -32,13 +33,6 @@ type StudyPlan = {
 
 const SUBJECTS: Subject[] = ["Chemistry", "Biology", "Math", "Computer Science"];
 const LEVELS: Level[] = ["IGCSE", "AS", "A Level"];
-
-const SUBJECT_EMOJIS: Record<string, string> = {
-  Chemistry: "⚡",
-  Biology: "🧬",
-  Math: "📐",
-  "Computer Science": "💻",
-};
 
 export default function PlannerPage() {
   const [plans, setPlans] = useState<StudyPlan[]>([]);
@@ -218,7 +212,7 @@ export default function PlannerPage() {
                       : "text-zinc-500 hover:text-zinc-300 border border-transparent"
                   }`}
                 >
-                  {SUBJECT_EMOJIS[s]} {s}
+                  <SubjectIcon subject={s} size={14} className="inline mr-1" /> {s}
                 </button>
               ))}
             </div>
@@ -307,9 +301,7 @@ export default function PlannerPage() {
               {/* Plan header */}
               <div className="p-3 flex items-center justify-between border-b border-zinc-800">
                 <div className="flex items-center gap-2">
-                  <span className="text-base">
-                    {SUBJECT_EMOJIS[plan.subject] || "📘"}
-                  </span>
+                  <SubjectIcon subject={plan.subject} size={18} className="text-zinc-400" />
                   <div>
                     <h3 className="text-sm font-semibold text-white">{plan.title}</h3>
                     <p className="text-[10px] text-zinc-500">
@@ -319,9 +311,9 @@ export default function PlannerPage() {
                 </div>
                 <button
                   onClick={() => deletePlan(plan.id)}
-                  className="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-red-500/20 flex items-center justify-center text-xs text-zinc-500 hover:text-red-400 transition-colors"
+                  className="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-red-500/20 flex items-center justify-center text-zinc-500 hover:text-red-400 transition-colors"
                 >
-                  🗑️
+                  <TrashIcon size={14} />
                 </button>
               </div>
 
@@ -340,7 +332,7 @@ export default function PlannerPage() {
                 {plan.plan_data?.weeks?.map((week, wi) => (
                   <details key={wi} className="group">
                     <summary className="flex items-center gap-2 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 cursor-pointer list-none">
-                      <span className="text-zinc-600 group-open:text-amber-400 transition-colors">▶</span>
+                      <ChevronRightIcon size={12} className="text-zinc-600 group-open:text-amber-400 transition-colors group-open:rotate-90" />
                       <span className="font-medium">Week {week.weekNumber}</span>
                       <span className="text-zinc-600">—</span>
                       <span className="text-zinc-500">{week.title}</span>
@@ -361,13 +353,13 @@ export default function PlannerPage() {
                             }`}
                           >
                             <span
-                              className={`w-4 h-4 rounded border flex items-center justify-center text-[8px] transition-colors shrink-0 ${
+                              className={`w-4 h-4 rounded border flex items-center justify-center transition-colors shrink-0 ${
                                 isDone
-                                  ? "bg-green-500 border-green-500 text-white"
+                                  ? "bg-green-500 border-green-500"
                                   : "border-zinc-600"
                               }`}
                             >
-                              {isDone ? "✓" : ""}
+                              {isDone ? <CheckIcon size={10} className="text-white" /> : null}
                             </span>
                             <div className="min-w-0 flex-1">
                               <p

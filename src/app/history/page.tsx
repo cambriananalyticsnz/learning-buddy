@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SamoyedIcon from "@/components/SamoyedIcon";
+import { SubjectIcon, TrashIcon, MessageIcon } from "@/components/Icons";
 
 type Conversation = {
   id: string;
@@ -11,13 +12,6 @@ type Conversation = {
   title: string;
   created_at: string;
   updated_at: string;
-};
-
-const SUBJECT_EMOJIS: Record<string, string> = {
-  Chemistry: "⚡",
-  Biology: "🧬",
-  Math: "📐",
-  "Computer Science": "💻",
 };
 
 export default function HistoryPage() {
@@ -121,8 +115,8 @@ export default function HistoryPage() {
               onClick={() => handleOpen(conv.id)}
               className="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 hover:bg-zinc-800/80 hover:border-zinc-700 transition-colors"
             >
-              <div className="w-9 h-9 rounded-lg bg-zinc-800 flex items-center justify-center text-base shrink-0">
-                {SUBJECT_EMOJIS[conv.subject] || "📝"}
+              <div className="w-9 h-9 rounded-lg bg-zinc-800 flex items-center justify-center shrink-0 text-zinc-400">
+                <SubjectIcon subject={conv.subject} size={18} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">
@@ -135,9 +129,9 @@ export default function HistoryPage() {
               <button
                 onClick={(e) => handleDelete(conv.id, e)}
                 disabled={deleting === conv.id}
-                className="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-red-500/20 flex items-center justify-center text-xs text-zinc-500 hover:text-red-400 transition-colors shrink-0 disabled:opacity-30"
+                className="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-red-500/20 flex items-center justify-center text-zinc-500 hover:text-red-400 transition-colors shrink-0 disabled:opacity-30"
               >
-                🗑️
+                <TrashIcon size={14} />
               </button>
             </button>
           ))}

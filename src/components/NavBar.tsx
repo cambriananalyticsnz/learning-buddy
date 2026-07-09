@@ -1,12 +1,13 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { MessageIcon, ClockIcon, TargetIcon, CalendarIcon } from "@/components/Icons";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Chat", icon: "💬" },
-  { href: "/history", label: "History", icon: "📋" },
-  { href: "/mistakes", label: "Mistakes", icon: "🎯" },
-  { href: "/planner", label: "Planner", icon: "📅" },
+  { href: "/", label: "Chat", Icon: MessageIcon },
+  { href: "/history", label: "History", Icon: ClockIcon },
+  { href: "/mistakes", label: "Mistakes", Icon: TargetIcon },
+  { href: "/planner", label: "Planner", Icon: CalendarIcon },
 ];
 
 export default function NavBar() {
@@ -29,7 +30,7 @@ export default function NavBar() {
                 : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
-            <span className="text-base leading-none">{item.icon}</span>
+            <item.Icon size={18} />
             <span className="text-[10px] font-medium">{item.label}</span>
           </a>
         );

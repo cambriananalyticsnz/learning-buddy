@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SamoyedIcon from "@/components/SamoyedIcon";
+import { SubjectIcon, AlertIcon, CheckIcon } from "@/components/Icons";
 
 type Mistake = {
   id: string;
@@ -12,13 +13,6 @@ type Mistake = {
   mistake_summary: string;
   frequency: number;
   last_occurred_at: string;
-};
-
-const SUBJECT_EMOJIS: Record<string, string> = {
-  Chemistry: "⚡",
-  Biology: "🧬",
-  Math: "📐",
-  "Computer Science": "💻",
 };
 
 function formatDate(dateStr: string) {
@@ -120,7 +114,7 @@ export default function MistakesPage() {
           {subjectOrder.map((subject) => (
             <div key={subject}>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-base">{SUBJECT_EMOJIS[subject] || "📘"}</span>
+                <SubjectIcon subject={subject} size={18} className="text-zinc-400" />
                 <h2 className="text-sm font-semibold text-zinc-300">{subject}</h2>
                 <span className="text-xs text-zinc-600">
                   ({grouped[subject].length})
@@ -148,8 +142,9 @@ export default function MistakesPage() {
                           ))}
                         </div>
                         <div className="flex items-center gap-3 mt-2 text-[10px] text-zinc-600">
-                          <span>
-                            🔴 ×{mistake.frequency}
+                          <span className="flex items-center gap-1">
+                            <AlertIcon size={10} className="text-zinc-600" />
+                            ×{mistake.frequency}
                           </span>
                           <span>
                             Last: {formatDate(mistake.last_occurred_at)}
@@ -159,10 +154,14 @@ export default function MistakesPage() {
                       <button
                         onClick={() => handleDelete(mistake.id)}
                         disabled={deleting === mistake.id}
-                        className="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-green-500/20 flex items-center justify-center text-xs text-zinc-500 hover:text-green-400 transition-colors shrink-0 disabled:opacity-30"
+                        className="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-green-500/20 flex items-center justify-center text-zinc-500 hover:text-green-400 transition-colors shrink-0 disabled:opacity-30"
                         title="Mark as resolved"
                       >
-                        {deleting === mistake.id ? "..." : "✓"}
+                        {deleting === mistake.id ? (
+                          <span className="text-xs">...</span>
+                        ) : (
+                          <CheckIcon size={14} />
+                        )}
                       </button>
                     </div>
                   </div>
