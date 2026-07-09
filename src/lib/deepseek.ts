@@ -7,6 +7,7 @@ export type ChatRequest = {
   messages: Message[];
   subject: string;
   difficulty: "simple" | "complex";
+  mistakeContext?: string;
 };
 
 export type ChatResponse = {
@@ -23,11 +24,11 @@ const MODEL_FLASH = "deepseek-chat"; // v4 Flash
 const MODEL_PRO = "deepseek-reasoner"; // v4 Pro
 
 export async function chat(request: ChatRequest): Promise<ChatResponse> {
-  const { messages, subject, difficulty } = request;
+  const { messages, subject, difficulty, mistakeContext } = request;
 
   const model = difficulty === "complex" ? MODEL_PRO : MODEL_FLASH;
 
-  const systemPrompt = `You are a friendly AI tutor for Cambridge CIE ${subject}.
+  let systemPrompt = `You are a friendly AI tutor for Cambridge CIE ${subject}.
 You help a Year 10-13 student understand concepts.
 - Explain clearly and conversationally, like a supportive older sibling
 - Use examples and simple language first, then layer in technical terms
@@ -35,6 +36,11 @@ You help a Year 10-13 student understand concepts.
 - Suggest related topics they might want to explore next
 - Keep answers concise but thorough enough for learning
 - Use the Socratic method when appropriate — guide them to discover answers themselves`;
+
+  // Append mistake context if available
+  if (mistakeContext) {
+    systemPrompt += `\n\n${mistakeContext}`;
+  }
 
   const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
     method: "POST",

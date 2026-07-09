@@ -4,7 +4,7 @@ import { chat } from "@/lib/deepseek";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { messages, subject, difficulty = "simple" } = body;
+    const { messages, subject, difficulty = "simple", mistakeContext } = body;
 
     if (!messages || !subject) {
       return NextResponse.json(
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await chat({ messages, subject, difficulty });
+    const result = await chat({ messages, subject, difficulty, mistakeContext });
 
     return NextResponse.json(result);
   } catch (error) {
